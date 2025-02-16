@@ -7,17 +7,9 @@
 CWifiAccessPointData::CWifiAccessPointData(const std::string &ssid,
                                            wifi_auth_mode_t authType,
                                            int channel, int rssi,
-                                           const uint8_t *bssid)
-    : m_Ssid(ssid), m_WifiAuthType(authType), m_Channel(channel), m_RSSI(rssi) {
-  std::stringstream ss;
-  for (int i = 0; i < 6; i++) {
-    ss << std::hex << std::setw(2) << std::setfill('0')
-       << static_cast<int>(bssid[i]);
-    if (i < 5) {
-      ss << ":"; // Add a colon between each byte (optional)
-    }
-  }
-  m_Bssid = ss.str();
+                                           const std::string &bssid)
+    : m_Ssid(ssid), m_WifiAuthType(authType), m_Channel(channel), m_RSSI(rssi), m_Bssid(bssid) {
+
 }
 
 // Getters (const methods since they don't modify the object's state)
@@ -61,10 +53,6 @@ std::string CWifiAccessPointData::GetEncryptionTypeString() {
 }
 
 WifiSignalStrength_e CWifiAccessPointData::GetSignalStrength() {
-  if (m_RSSI == 0) {
-    return WifiSignalStrength_e::NoSignal;
-  }
-
   if (m_RSSI >= -70 && m_RSSI <= -30) {
     return WifiSignalStrength_e::Excellent;
   } else if (m_RSSI >= -80 && m_RSSI <= -71) {
@@ -76,4 +64,5 @@ WifiSignalStrength_e CWifiAccessPointData::GetSignalStrength() {
   } else if (m_RSSI <= -90) { // rssi <= -90: Extremely weak
     return WifiSignalStrength_e::ExtremelyWeak;
   }
+  return WifiSignalStrength_e::NoSignal;
 }

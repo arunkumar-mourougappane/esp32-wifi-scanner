@@ -33,8 +33,7 @@ private:
   WifiAccessPointMap_t m_AvailableWifiNetworks;
 
 public:
-  CWifiScanner();
-  ~CWifiScanner();
+  CWifiScanner() {};
   void ScanWiFi();
 };
 

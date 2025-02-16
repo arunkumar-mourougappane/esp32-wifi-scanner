@@ -34,8 +34,8 @@ private:
 
 public:
   CWifiAccessPointData(const std::string &ssid, wifi_auth_mode_t authType,
-                       int channel, int rssi, const uint8_t *bssid);
-
+                       int channel, int rssi, const std::string &bssid);
+   CWifiAccessPointData() {};
   // Getters (const methods since they don't modify the object's state)
   const std::string &GetSsid() const;
 

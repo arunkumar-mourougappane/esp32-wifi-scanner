@@ -15,79 +15,10 @@
 #include <Arduino.h>
 #include <WiFi.h>
 
+#include "CWifiScanner.h"
+
 Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);
-
-void printEncryptionType(int thisType) {
-  switch (thisType) {
-  case WIFI_AUTH_OPEN:
-    Serial.println("Open");
-    break;
-  case WIFI_AUTH_WEP:
-    Serial.println("WEP");
-    break;
-  case WIFI_AUTH_WPA_PSK:
-    Serial.println("WPA PSK");
-    break;
-  case WIFI_AUTH_WPA2_PSK:
-    Serial.println("WPA2 PSK");
-    break;
-  case WIFI_AUTH_WPA2_ENTERPRISE:
-    Serial.println("WPA2 Enterprise");
-    break;
-  case WIFI_AUTH_WPA3_PSK:
-    Serial.println("WPA2 PSK");
-    break;
-  case WIFI_AUTH_WPA2_WPA3_PSK:
-    Serial.println("WPA2/WPA3 PSK");
-    break;
-  case WIFI_AUTH_WAPI_PSK:
-    Serial.println("WPAI PSK");
-    break;
-  case WIFI_AUTH_WPA3_ENT_192:
-    Serial.println("WPA3 Etnerpise suit 192-bit");
-    break;
-  default:
-    Serial.println("Unknown");
-    break;
-  }
-}
-
-void printBSSID(const uint8_t *bssid) {
-  for (int i = 0; i < 6; i++) {
-    if (bssid[i] < 0x10) { // Add leading zero if needed
-      Serial.print("0");
-    }
-    Serial.print(bssid[i], HEX); // Print as hexadecimal
-    if (i < 5) {
-      Serial.print(":"); // Add colon separator
-    }
-  }
-}
-
-void scanWiFi() {
-  int numNetworks = WiFi.scanNetworks();
-
-  if (numNetworks == 0) {
-    Serial.println("No Wi-Fi networks found.");
-  } else {
-    Serial.printf("Networks found: %d\n", numNetworks);
-    Serial.println(" Wi-Fi networks found:");
-
-    for (int i = 0; i < numNetworks; ++i) {
-      Serial.print(i + 1);
-      Serial.print(": ");
-      Serial.println(WiFi.SSID(i));
-      Serial.print("  RSSI: ");
-      Serial.println(WiFi.RSSI(i));
-      Serial.print("  Encryption: ");
-      printEncryptionType(WiFi.encryptionType(i));
-      Serial.print("  BSSID: ");
-      printBSSID(WiFi.BSSID(i));
-      Serial.printf("  Channel: %d\n", WiFi.channel(i));
-      Serial.println();
-    }
-  }
-}
+CWifiScanner wifiScanner;
 
 void drawWifiSignal(int strength) {
   int x = 10;
@@ -161,15 +92,14 @@ void setup(void) {
 }
 
 void loop() {
-  delay(5000);
+  delay(3000);
+  tft.fillScreen(ST77XX_BLACK);
   Serial.println("Scanning for Wifi networks...");
-  scanWiFi();
+  wifiScanner.ScanWiFi();
   // Simulate changing signal strength (replace with actual readings)
   for (int strength = 0; strength <= 100; strength += 20) {
     drawWifiSignal(strength);
     delay(1000);
   }
-  delay(1000);
-  tft.fillScreen(ST77XX_BLACK);
-  delay(2000);
+
 }

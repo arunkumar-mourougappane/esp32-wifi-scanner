@@ -10,6 +10,9 @@
  *
  */
 #include "CWifiScanner.h"
+#include <atomic>
+#include <iomanip>
+#include <sstream>
 #include <string>
 
 void CWifiScanner::ScanWiFi() {
@@ -18,17 +21,21 @@ void CWifiScanner::ScanWiFi() {
 
   if (numNetworks == 0) {
     m_AvailableWifiNetworks.clear();
-    m_IsDataReady = true;
     Serial.println("No Wi-Fi networks found.");
   } else {
     Serial.printf("Networks found: %d\n", numNetworks);
     Serial.println(" Wi-Fi networks found:");
-    Serial.printf("%3d|%-30s|%10s|%10d|%-25s\n", "No", "SSID", "RSSI(dBm)",
-                  "Channel", "BSSID");
+
     for (int i = 0; i < numNetworks; ++i) {
-         CWifiAccessPointData wifiAccessPoint(std::string(WiFi.SSID(i).c_str()), WiFi.encryptionType(i), WiFi.channel(i), WiFi.RSSI(i), WiFi.BSSID(i));
-         m_AvailableWifiNetworks[std::string(WiFi.SSID(i).c_str())] = wifiAccessPoint;
-         Serial.printf("%3d|%-30s|%10d|%10d|%-25s\n", i+1, wifiAccessPoint.GetSsid().c_str(), wifiAccessPoint.GetSignalStrength(), wifiAccessPoint.GetSignalStrength(), wifiAccessPoint.GetChannel(), wifiAccessPoint.GetBssid().c_str());
+      m_AvailableWifiNetworks[std::string(WiFi.SSID(i).c_str())] =
+          CWifiAccessPointData(std::string(WiFi.SSID(i).c_str()),
+                               WiFi.encryptionType(i), WiFi.channel(i),
+                               WiFi.RSSI(i), WiFi.BSSIDstr(i).c_str());
+      Serial.printf("%d ->  %s\n",i+1, WiFi.SSID(i).c_str());
+      Serial.printf("\tChanel: %d RSSI: %d\n",WiFi.channel(i), WiFi.RSSI(i));
+      Serial.printf("\tWifi Auth Type: %s\n",m_AvailableWifiNetworks[std::string(WiFi.SSID(i).c_str())].GetEncryptionTypeString().c_str());
+      Serial.printf("\tBSSID: %s\n", WiFi.BSSIDstr(i).c_str());
     }
   }
+  m_IsDataReady = true;
 }
