@@ -60,6 +60,8 @@ void drawWifiSignal(int strength) {
 
 void setup(void) {
   Serial.begin(115200);
+  Serial.setDebugOutput(true);
+
   Serial.println();
   delay(3000);
   // turn on backlite
@@ -79,14 +81,6 @@ void setup(void) {
   Serial.println(F("Initialized"));
 
   uint16_t time = millis();
-  tft.fillScreen(ST77XX_BLACK);
-  time = millis() - time;
-
-  Serial.println(time, DEC);
-  delay(500);
-
-  // large block of text
-  tft.fillScreen(ST77XX_BLACK);
 
   Serial.println("done");
 }
@@ -94,12 +88,11 @@ void setup(void) {
 void loop() {
   delay(3000);
   tft.fillScreen(ST77XX_BLACK);
-  Serial.println("Scanning for Wifi networks...");
+  log_i("Scanning for Wifi networks...");
   wifiScanner.ScanWiFi();
   // Simulate changing signal strength (replace with actual readings)
   for (int strength = 0; strength <= 100; strength += 20) {
     drawWifiSignal(strength);
     delay(1000);
   }
-
 }

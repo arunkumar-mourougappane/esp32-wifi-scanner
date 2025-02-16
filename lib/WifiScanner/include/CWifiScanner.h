@@ -34,6 +34,8 @@ private:
 
 public:
   CWifiScanner() {};
+  bool IsAvailable() const;
+  void GetWifiAccessPointsInfo(WifiAccessPointMap_t &wifAccessPoint);
   void ScanWiFi();
 };
 
