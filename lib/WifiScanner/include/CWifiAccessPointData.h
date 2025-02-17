@@ -47,7 +47,7 @@ public:
 
   const std::string &GetBssid() const;
 
-  WifiSignalStrength_e GetSignalStrength();
+  WifiSignalStrength_e GetSignalStrength() const;
 
   std::string GetEncryptionTypeString();
 };

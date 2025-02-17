@@ -52,7 +52,7 @@ std::string CWifiAccessPointData::GetEncryptionTypeString() {
   }
 }
 
-WifiSignalStrength_e CWifiAccessPointData::GetSignalStrength() {
+WifiSignalStrength_e CWifiAccessPointData::GetSignalStrength() const {
   if (m_RSSI >= -70 && m_RSSI <= -30) {
     return WifiSignalStrength_e::Excellent;
   } else if (m_RSSI >= -80 && m_RSSI <= -71) {
